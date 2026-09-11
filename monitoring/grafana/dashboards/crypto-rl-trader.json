@@ -1,0 +1,157 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Trading Equity",
+      "id": 1,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "trading_equity",
+          "legendFormat": "{{mode}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Risk Veto Rate",
+      "id": 2,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum by (reason) (rate(trading_risk_vetoes_total[5m]))",
+          "legendFormat": "{{reason}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Orders / Fills",
+      "id": 3,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "targets": [
+        {
+          "expr": "sum by (status) (rate(trading_orders_total[5m]))",
+          "legendFormat": "orders {{status}}"
+        },
+        {
+          "expr": "sum(rate(trading_fills_total[5m]))",
+          "legendFormat": "fills"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "REST Errors / WS Reconnects",
+      "id": 4,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(trading_rest_errors_total[5m]))",
+          "legendFormat": "REST"
+        },
+        {
+          "expr": "sum(rate(market_ws_reconnects_total[5m]))",
+          "legendFormat": "WS"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Inference Latency",
+      "id": 5,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95,sum by (le,model) (rate(model_inference_latency_seconds_bucket[5m])))",
+          "legendFormat": "p95 {{model}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Market Data Gaps",
+      "id": 6,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "targets": [
+        {
+          "expr": "sum by (kind) (rate(market_data_gaps_total[5m]))",
+          "legendFormat": "{{kind}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Exposure / uPnL",
+      "id": 7,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "targets": [
+        {
+          "expr": "trading_exposure_notional",
+          "legendFormat": "exposure {{mode}}"
+        },
+        {
+          "expr": "trading_unrealized_pnl",
+          "legendFormat": "uPnL {{mode}}"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "style": "dark",
+  "tags": [
+    "crypto",
+    "trading",
+    "infra"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "title": "Crypto RL Trader - Trading & Infrastructure",
+  "uid": "crypto-rl-trader"
+}

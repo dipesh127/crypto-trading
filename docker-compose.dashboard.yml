@@ -1,0 +1,35 @@
+services:
+  dashboard:
+    build: .
+    command: python scripts/dashboard.py
+    ports:
+      - "8000:8000"
+    env_file: .env
+    depends_on:
+      - postgres
+      - redis
+  frontend:
+    image: node:22-alpine
+    working_dir: /frontend
+    volumes:
+      - ./frontend:/frontend
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "5173:5173"
+    depends_on:
+      - dashboard
+# When running frontend inside Compose, set VITE_API_PROXY=http://dashboard:8000 and VITE_WS_PROXY=ws://dashboard:8000.
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    ports: ["9090:9090"]
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on: [dashboard]
+  grafana:
+    image: grafana/grafana:12.1.1
+    ports: ["3000:3000"]
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on: [prometheus]

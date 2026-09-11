@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: timescale/timescaledb:latest-pg16
+    environment:
+      POSTGRES_DB: crypto_rl
+      POSTGRES_USER: trader
+      POSTGRES_PASSWORD: trader
+    ports: ["5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U trader -d crypto_rl"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+  market-ingestion:
+    build: .
+    command: python scripts/market_data_service.py
+    env_file: .env
+    depends_on:
+      - postgres
+      - redis
+  archive-market-data:
+    build: .
+    command: sh -c "while true; do python scripts/archive_market_data.py; sleep 86400; done"
+    env_file: .env
+    depends_on:
+      - postgres
+volumes:
+  pgdata:

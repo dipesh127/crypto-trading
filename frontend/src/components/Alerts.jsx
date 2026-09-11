@@ -1,0 +1,2 @@
+import React,{useEffect,useState} from 'react'
+export default function Alerts({mode,enabled=true}){const [rows,setRows]=useState([]);useEffect(()=>{if(!enabled)return;fetch('/api/alerts?mode='+mode).then(r=>r.json()).then(x=>setRows(x||[])).catch(()=>{})},[enabled,mode]);return <div className="alerts">{rows.map((a,i)=><div className="alert" key={i}><small>{a.event_time}</small><b>{a.kind}</b><span>{a.message}</span></div>)}</div>}
