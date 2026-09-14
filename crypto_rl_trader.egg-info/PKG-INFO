@@ -1,0 +1,28 @@
+Metadata-Version: 2.4
+Name: crypto-rl-trader
+Version: 0.1.2
+Requires-Python: >=3.11
+Requires-Dist: aiohttp<4,>=3.10
+Requires-Dist: websockets<16,>=13
+Requires-Dist: asyncpg<1,>=0.29
+Requires-Dist: redis<7,>=5
+Requires-Dist: pydantic<3,>=2.8
+Requires-Dist: pydantic-settings<3,>=2.4
+Requires-Dist: tenacity<10,>=9
+Requires-Dist: numpy<3,>=1.26
+Requires-Dist: pandas<3,>=2.2
+Requires-Dist: pyarrow<22,>=15
+Requires-Dist: scikit-learn<2,>=1.5
+Requires-Dist: scipy<2,>=1.13
+Requires-Dist: gymnasium<2,>=1.0
+Requires-Dist: torch<3,>=2.2
+Requires-Dist: stable-baselines3<3,>=2.4
+Requires-Dist: optuna<5,>=4
+Requires-Dist: mlflow<4,>=2.16
+Requires-Dist: fastapi<1,>=0.115
+Requires-Dist: uvicorn[standard]<1,>=0.32
+Requires-Dist: prometheus-client<1,>=0.21
+Provides-Extra: dev
+Requires-Dist: pytest<9,>=8; extra == "dev"
+Requires-Dist: pytest-asyncio<1,>=0.24; extra == "dev"
+Requires-Dist: ruff<1,>=0.8; extra == "dev"

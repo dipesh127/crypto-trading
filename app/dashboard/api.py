@@ -18,11 +18,23 @@ def create_app(pool=None, redis_url="redis://localhost:6379/0"):
     hub=DashboardHub()
     app.state.pool=pool; app.state.cache=cache; app.state.hub=hub
 
-    @app.get('/api/rate-limit')
+    @app.get("/api/rate-limit")
     async def rate_limit_pressure():
         from app.monitoring import binance_rate_limit_state
-        state=await cache.get("telemetry:binance_rate_limit")
-        return state or binance_rate_limit_state()
+
+        state = await cache.get("telemetry:binance_rate_limit")
+
+        if not state:
+            state = binance_rate_limit_state()
+
+    return {
+        "weight_remaining": state.get("weight_remaining"),
+        "orders_remaining": state.get("orders_remaining"),
+        "raw_remaining": state.get("raw_remaining"),
+        "429_total": state.get("429_total", 0),
+        "418_total": state.get("418_total", 0),
+        "updated_at": state.get("updated_at"),
+    }
 
     def svc():
         if app.state.pool is None: raise HTTPException(503,"database pool not configured")
